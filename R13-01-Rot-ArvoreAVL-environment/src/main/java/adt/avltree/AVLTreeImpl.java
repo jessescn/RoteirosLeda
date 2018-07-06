@@ -65,42 +65,6 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 		}
 	}
 
-	/**
-	 * Metodo auxiliar da leftRotation da classe Util tanto para verificar no caso
-	 * do node ser a raiz, como para atualizar os apontadores do novo node (node que
-	 * antes era o filho passando a ser o parent) do parent pro node e do node pro
-	 * parent
-	 * 
-	 * @param node
-	 */
-	private void leftRotation(BSTNode<T> node) {
-		BSTNode<T> aux = Util.leftRotation(node);
-
-		if (node.equals(this.root)) {
-			this.root = aux;
-		} else {
-			putLocal((BSTNode<T>) aux.getParent(), node, aux);
-		}
-	}
-
-	/**
-	 * Metodo auxiliar da RightRotation da classe Util tanto para verificar no caso
-	 * do node ser a raiz, como para atualizar os apontadores do novo node (node que
-	 * antes era o filho passando a ser o parent) do parent pro node e do node pro
-	 * parent
-	 * 
-	 * @param node
-	 */
-	private void rightRotation(BSTNode<T> node) {
-		BSTNode<T> aux = Util.rightRotation(node);
-
-		if (node.equals(this.root)) {
-			this.root = aux;
-		} else {
-			putLocal((BSTNode<T>) aux.getParent(), node, aux);
-		}
-
-	}
 
 	// AUXILIARY
 	protected void rebalanceUp(BSTNode<T> node) {
@@ -167,6 +131,41 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 		this.rebalance(node);
 	}
 
+	
+
+	@Override
+	public void remove(T element) {
+		if (element != null) {
+
+			BSTNode<T> node = search(element);
+
+			// Se o node retornado do metodo search for diferente de vazio (o elemento esta
+			// contido na bst)
+			if (!node.isEmpty()) {
+
+				// Se o node for uma folha
+				if (node.isLeaf()) {
+					this.noSon(node);
+
+				} else {
+
+					// Se o node tiver apenas uma folha
+					if ((node.getLeft().isEmpty() || node.getRight().isEmpty())) {
+						this.oneSon(node);
+
+						// Se nao, ou seja, se ele possuir as duas folhas
+					} else {
+						this.twoSons(node, element);
+					}
+				}
+
+				// Apos a remocao, eh chamado o metodo para rebalancear a avl, do node subindo
+				// ate a raiz
+				rebalanceUp(node);
+			}
+		}
+	}
+	
 	/**
 	 * Metodo auxiliar do remove quando o node nao possui filho (eh uma folha), que
 	 * somente seta o data como null, ou seja, o node passa a ser NIL
@@ -233,37 +232,42 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 			node.setData(data);
 		}
 	}
+	
+	/**
+	 * Metodo auxiliar da leftRotation da classe Util tanto para verificar no caso
+	 * do node ser a raiz, como para atualizar os apontadores do novo node (node que
+	 * antes era o filho passando a ser o parent) do parent pro node e do node pro
+	 * parent
+	 * 
+	 * @param node
+	 */
+	private void leftRotation(BSTNode<T> node) {
+		BSTNode<T> aux = Util.leftRotation(node);
 
-	@Override
-	public void remove(T element) {
-		if (element != null) {
-
-			BSTNode<T> node = search(element);
-
-			// Se o node retornado do metodo search for diferente de vazio (o elemento esta
-			// contido na bst)
-			if (!node.isEmpty()) {
-
-				// Se o node for uma folha
-				if (node.isLeaf()) {
-					this.noSon(node);
-
-				} else {
-
-					// Se o node tiver apenas uma folha
-					if ((node.getLeft().isEmpty() || node.getRight().isEmpty())) {
-						this.oneSon(node);
-
-						// Se nao, ou seja, se ele possuir as duas folhas
-					} else {
-						this.twoSons(node, element);
-					}
-				}
-
-				// Apos a remocao, eh chamado o metodo para rebalancear a avl, do node subindo
-				// ate a raiz
-				rebalanceUp(node);
-			}
+		if (node.equals(this.root)) {
+			this.root = aux;
+		} else {
+			putLocal((BSTNode<T>) aux.getParent(), node, aux);
 		}
 	}
+
+	/**
+	 * Metodo auxiliar da RightRotation da classe Util tanto para verificar no caso
+	 * do node ser a raiz, como para atualizar os apontadores do novo node (node que
+	 * antes era o filho passando a ser o parent) do parent pro node e do node pro
+	 * parent
+	 * 
+	 * @param node
+	 */
+	private void rightRotation(BSTNode<T> node) {
+		BSTNode<T> aux = Util.rightRotation(node);
+
+		if (node.equals(this.root)) {
+			this.root = aux;
+		} else {
+			putLocal((BSTNode<T>) aux.getParent(), node, aux);
+		}
+
+	}
+
 }
