@@ -58,7 +58,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 		}
 		return new BSTNode<T>();
 	}
-	
+
 	@Override
 	public void insert(T element) {
 		insert(element, this.root);
@@ -126,12 +126,12 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private BSTNode<T> sucessor(BSTNode<T> node) {
-		if(!node.getRight().isEmpty()) {
+		if (!node.getRight().isEmpty()) {
 			return this.minimum((BSTNode<T>) node.getRight());
-		}else{
+		} else {
 			BSTNode<T> auxA = node;
 			BSTNode<T> auxB = (BSTNode<T>) node.getParent();
-			while(auxB != null && auxA == auxB.getRight()) {
+			while (auxB != null && auxA == auxB.getRight()) {
 				auxA = auxB;
 				auxB = (BSTNode<T>) auxB.getParent();
 			}
@@ -142,19 +142,19 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	@Override
 	public BSTNode<T> predecessor(T element) {
 		BSTNode<T> node = search(element);
-		if(!node.isEmpty()) {
+		if (!node.isEmpty()) {
 			return predecessor(node);
 		}
 		return null;
 	}
-	
-	private BSTNode<T> predecessor(BSTNode<T> node){
-		if(!node.getLeft().isEmpty()) {
+
+	private BSTNode<T> predecessor(BSTNode<T> node) {
+		if (!node.getLeft().isEmpty()) {
 			return maximum((BSTNode<T>) node.getLeft());
-		}else {
+		} else {
 			BSTNode<T> auxA = node;
 			BSTNode<T> auxB = (BSTNode<T>) node.getParent();
-			while(auxB != null && auxA == auxB.getLeft()) {
+			while (auxB != null && auxA == auxB.getLeft()) {
 				auxA = auxB;
 				auxB = (BSTNode<T>) auxB.getParent();
 			}
@@ -164,36 +164,44 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public void remove(T element) {
-		BSTNode<T> node = search(element);
-		if (!node.isEmpty()) {
-			if (node.isLeaf()) {
-				if (!node.equals(root)) {
-					putLocal((BSTNode<T>) node.getParent(), node, new BSTNode<T>());
-				} else {
-					this.root = new BSTNode<T>();
-				}
+		if (element != null) {
+			BSTNode<T> node = search(element);
+			if (!node.isEmpty()) {
+				remove(node);
+			}
+		}
+	}
+
+	private void remove(BSTNode<T> node) {
+		if (node.isLeaf()) {
+			if (!node.equals(root)) {
+				putLocal((BSTNode<T>) node.getParent(), node, new BSTNode<T>());
 			} else {
+				this.root = new BSTNode<T>();
+			}
+		} else {
 
-				if ((node.getLeft().isEmpty() || node.getRight().isEmpty()) && !node.equals(root)) {
+			if ((node.getLeft().isEmpty() || node.getRight().isEmpty()) && !node.equals(root)) {
 
-					if (node.getLeft().isEmpty()) {
-						putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getRight());
-					} else {
-						putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getLeft());
-					}
-
+				if (node.getLeft().isEmpty()) {
+					putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getRight());
 				} else {
-					if (!node.getLeft().isEmpty()) {
-						T elemento = maximum((BSTNode<T>) node.getLeft()).getData();
-						remove(elemento);
-						node.setData(elemento);
-					} else {
+					putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getLeft());
+				}
 
-						T elemento = minimum((BSTNode<T>) node.getRight()).getData();
-						remove(elemento);
-						node.setData(elemento);
+			} else {
+				if (!node.getLeft().isEmpty()) {
+					BSTNode<T> elemento = search(maximum((BSTNode<T>) node.getLeft()).getData());
+					T data = elemento.getData();
+					remove(elemento);
+					node.setData(data);
+				} else {
 
-					}
+					BSTNode<T> elemento = search(minimum((BSTNode<T>) node.getRight()).getData());
+					T data = elemento.getData();
+					remove(elemento);
+					node.setData(data);
+
 				}
 			}
 		}
@@ -208,7 +216,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 			newNode.setParent(parent);
 		}
 	}
-	
+
 	@Override
 	public T[] preOrder() {
 		T[] array = (T[]) new Comparable[size()];
@@ -228,13 +236,13 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 		}
 		return array;
 	}
-	
+
 	public void push(T[] array, T element) {
 		int i = 0;
 		while (array[i] != null) {
 			i++;
 		}
-		if(array[i] == null) {
+		if (array[i] == null) {
 			array[i] = element;
 		}
 	}
