@@ -1,4 +1,4 @@
-package adt.heap;
+package adt.avltree;
 
 import static org.junit.Assert.*;
 
