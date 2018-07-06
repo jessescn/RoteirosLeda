@@ -108,38 +108,57 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 		}
 		rebalance(node);
 	}
-	
+
+	/*@Override
+	public void remove(T element) {
+		
+		if (element != null) {
+			BSTNode<T> node = search(element);
+			if (!node.isEmpty()) {
+				BSTNode<T> parent = (BSTNode<T>) node.getParent();
+				super.remove(element);
+				rebalanceUp(node);
+			}
+		}
+	}*/
 	@Override
 	public void remove(T element) {
 		BSTNode<T> node = search(element);
 		if (!node.isEmpty()) {
 			if (node.isLeaf()) {
 				if (!node.equals(root)) {
-					putLocal((BSTNode<T>) node.getParent(), node, new BSTNode<>());
+					node.setData(null);
 				} else {
 					this.root = new BSTNode<T>();
 				}
-
-				rebalanceUp(node);
+				
 			} else {
 
 				if ((node.getLeft().isEmpty() || node.getRight().isEmpty())) {
-
+					if(!node.equals(root)) {
 					if (node.getLeft().isEmpty()) {
 						putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getRight());
 					} else {
 						putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getLeft());
 					}
-
-					rebalanceUp(node);
+					}else {
+						if(this.root.getRight().isEmpty()) {
+							this.root = (BSTNode<T>) node.getLeft();
+						}else {
+							this.root = (BSTNode<T>) node.getRight();
+						}
+					}
+					
 				} else {
 					if(sucessor(element) != null) {
-						T elemento = sucessor(element).getData();
-						remove(elemento);
-						node.setData(elemento);
+						BSTNode<T> sucessor = sucessor(element);
+						T data = sucessor(element).getData();
+						remove(sucessor.getData());
+						node.setData(data);
 					}
 				}
 			}
+			rebalanceUp(node);
 		}
 	}
 }

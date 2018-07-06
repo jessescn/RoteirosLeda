@@ -161,42 +161,44 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
    }
 
    @Override
-   public void remove(T element) {
-      if (element != null) {
-         BSTNode<T> node = search(element);
-         if (!node.isEmpty()) {
-            remove(node);
-         }
-      }
-   }
+	public void remove(T element) {
+		BSTNode<T> node = search(element);
+		if (!node.isEmpty()) {
+			if (node.isLeaf()) {
+				if (!node.equals(root)) {
+					node.setData(null);
+				} else {
+					this.root = new BSTNode<T>();
+				}
+				
+			} else {
 
-   protected void remove(BSTNode<T> node) {
-      if (node.isLeaf()) {
-         if (!node.equals(root)) {
-            putLocal((BSTNode<T>) node.getParent(), node, new BSTNode<T>());
-         } else {
-            this.root = new BSTNode<T>();
-         }
-      } else {
-
-         if ((node.getLeft().isEmpty() || node.getRight().isEmpty()) && !node.equals(root)) {
-
-            if (node.getLeft().isEmpty()) {
-               putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getRight());
-            } else {
-               putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getLeft());
-            }
-
-         } else {
-            if (sucessor(node.getData()) != null) {
-               T elemento = sucessor(node.getData()).getData();
-               remove(elemento);
-               node.setData(elemento);
-
-            }
-         }
-      }
-   }
+				if ((node.getLeft().isEmpty() || node.getRight().isEmpty())) {
+					if(!node.equals(root)) {
+					if (node.getLeft().isEmpty()) {
+						putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getRight());
+					} else {
+						putLocal((BSTNode<T>) node.getParent(), node, (BSTNode<T>) node.getLeft());
+					}
+					}else {
+						if(this.root.getRight().isEmpty()) {
+							this.root = (BSTNode<T>) node.getLeft();
+						}else {
+							this.root = (BSTNode<T>) node.getRight();
+						}
+					}
+					
+				} else {
+					if(sucessor(element) != null) {
+						BSTNode<T> sucessor = sucessor(element);
+						T data = sucessor(element).getData();
+						remove(sucessor.getData());
+						node.setData(data);
+					}
+				}
+			}
+		}
+	}
 
    public void putLocal(BSTNode<T> parent, BSTNode<T> node, BSTNode<T> newNode) {
 
