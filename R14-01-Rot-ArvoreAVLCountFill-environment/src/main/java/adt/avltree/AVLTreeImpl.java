@@ -20,11 +20,12 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 
 	// AUXILIARY
 	protected int calculateBalance(BSTNode<T> node) {
+		int height = -1;
 		if (!node.isEmpty()) {
 			if (node instanceof BSTNode)
-				return height((BSTNode<T>) node.getLeft()) - height((BSTNode<T>) node.getRight());
+				height = height((BSTNode<T>) node.getLeft()) - height((BSTNode<T>) node.getRight());
 		}
-		return -1;
+		return height;
 	}
 
 	// AUXILIARY
@@ -85,7 +86,7 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 		} else {
 
 
-			if (element.compareTo(node.getData()) < 0) {
+			if (element.compareTo(node.getData()) <= 0) {
 
 		
 				if (node.getLeft().isEmpty()) {

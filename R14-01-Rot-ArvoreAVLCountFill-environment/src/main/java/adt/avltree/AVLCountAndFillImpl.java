@@ -1,7 +1,11 @@
 package adt.avltree;
 
-import adt.bst.BSTNode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
+import adt.bst.BSTNode;
 
 public class AVLCountAndFillImpl<T extends Comparable<T>> extends AVLTreeImpl<T> implements AVLCountAndFill<T> {
 
@@ -42,7 +46,7 @@ public class AVLCountAndFillImpl<T extends Comparable<T>> extends AVLTreeImpl<T>
          if (node instanceof BSTNode) {
             boolean notZZ = true;
 
-            if (balance > 1) {
+            if (balance > 0) {
 
                notZZ = true;
 
@@ -58,10 +62,11 @@ public class AVLCountAndFillImpl<T extends Comparable<T>> extends AVLTreeImpl<T>
                   this.LRcounter++;
                }
 
-            } else if (balance < -1) {
+            } else if (balance < 0) {
                notZZ = true;
 
                if (calculateBalance((BSTNode<T>) node.getRight()) > 0) {
+
                   notZZ = false;
                   this.rightRotation((BSTNode<T>) node.getRight());
                }
@@ -81,54 +86,64 @@ public class AVLCountAndFillImpl<T extends Comparable<T>> extends AVLTreeImpl<T>
    @Override
    public void fillWithoutRebalance(T[] array) {
       if (array.length > 0) {
-         this.sort(array);
-         double div = (array.length - 1) / 2;
-         this.fillingWithoutBalance(array, div);
+         T[] combined = combine(array);
+         Arrays.sort(combined);
+         this.fillingWithoutBalance(combined);
       }
-
    }
 
-   private void fillingWithoutBalance(T[] array, double div) {
+   private T[] combine(T[] array) {
+      T[]  arrayAux = Arrays.copyOf(array,array.length + this.size());
+      
+      if (!isEmpty()) {
+        for(int i = array.length; i < arrayAux.length; i++) {
+        	arrayAux[i] = preOrder()[i - array.length];
+        }
+      }
  
+      this.root = new BSTNode<T>();
+      return arrayAux;
+   }
+
+   private void fillingWithoutBalance(T[] array) {
+
+      Queue<Integer[]> fila = new LinkedList<>();
+
+      Integer[] pair = new Integer[2];
+      pair[0] = 0;
+      pair[1] = array.length - 1;
+      fila.add(pair);
+
       do {
-    	  
-         for (double i = div; i < array.length - 1; i += div) {
+         Integer[] internal = fila.peek();
 
-            if (i > (array.length - 1) / 2) {
-               if (search(array[(int) Math.ceil(i)]).isEmpty()) {
-                  insert(array[(int) Math.ceil(i)]);
-               }
-            } else {
-               if (search(array[(int) i]).isEmpty()) {
-                  insert(array[(int) Math.floor(i)]);
+         int index = (internal[0] + internal[1]) / 2;
 
-               }
+         insert(array[index]);
+      
+
+         fila.remove();
+      
+         if (internal[0] <= internal[1]) {
+
+            if (index - 1 >= internal[0]) {
+
+               Integer[] aux = new Integer[2];
+               aux[0] = internal[0];
+               aux[1] = index - 1;
+               fila.add(aux);
+   
+            }
+            if (index + 1 <= internal[1]) {
+
+               Integer[] aux = new Integer[2];
+               aux[0] = index + 1;
+               aux[1] = internal[1];
+               fila.add(aux);
             }
          }
 
-         div = div / 2;
-
-      } while (div > 1);
-
-      for (int i = 0; i < array.length; i++) {
-         if (search(array[i]).isEmpty()) {
-            insert(array[i]);
-         }
-      }
+      } while (fila.size() > 0);
    }
-   
-   private void sort(T[] array) {
-		for (int i =  1; i < array.length; i++) {
-			T aux = array[i];
-			int j = i;
 
-			while (j > 0 && (array[j - 1].compareTo(aux) > 0)) {
-				T a = array[j - 1];
-				array[j - 1] = array[j];
-				array[j] = a;
-				j--;
-			}
-
-		}
-	}
 }

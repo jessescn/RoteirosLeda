@@ -61,8 +61,8 @@ public class StudentTestAVLCountAndFill {
 		Integer[] keys = { 8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15 };
 		tree1.fillWithoutRebalance(keys);
 		assertEquals(0, tree1.LLcount());
-		assertEquals(0, tree1.RRcount());
-		assertEquals(0, tree1.LRcount());
 		assertEquals(0, tree1.RLcount());
+		assertEquals(0, tree1.LRcount());
+		assertEquals(0, tree1.RRcount());
 	}
 }
