@@ -1,6 +1,5 @@
 package adt.avltree;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -93,14 +92,14 @@ public class AVLCountAndFillImpl<T extends Comparable<T>> extends AVLTreeImpl<T>
    }
 
    private T[] combine(T[] array) {
-      T[]  arrayAux = Arrays.copyOf(array,array.length + this.size());
-      
+      T[] arrayAux = Arrays.copyOf(array, array.length + this.size());
+
       if (!isEmpty()) {
-        for(int i = array.length; i < arrayAux.length; i++) {
-        	arrayAux[i] = preOrder()[i - array.length];
-        }
+         for (int i = array.length; i < arrayAux.length; i++) {
+            arrayAux[i] = preOrder()[i - array.length];
+         }
       }
- 
+
       this.root = new BSTNode<T>();
       return arrayAux;
    }
@@ -114,25 +113,22 @@ public class AVLCountAndFillImpl<T extends Comparable<T>> extends AVLTreeImpl<T>
       pair[1] = array.length - 1;
       fila.add(pair);
 
-      do {
+      while(fila.size() > 0) {
+    	  
          Integer[] internal = fila.peek();
-
          int index = (internal[0] + internal[1]) / 2;
-
+         
          insert(array[index]);
-      
-
          fila.remove();
-      
-         if (internal[0] <= internal[1]) {
 
+         if (internal[0] <= internal[1]) {
             if (index - 1 >= internal[0]) {
 
                Integer[] aux = new Integer[2];
                aux[0] = internal[0];
                aux[1] = index - 1;
                fila.add(aux);
-   
+
             }
             if (index + 1 <= internal[1]) {
 
@@ -143,7 +139,7 @@ public class AVLCountAndFillImpl<T extends Comparable<T>> extends AVLTreeImpl<T>
             }
          }
 
-      } while (fila.size() > 0);
+      }
    }
 
 }
