@@ -34,10 +34,12 @@ public class SkipListImpl<T> implements SkipList<T> {
       SkipListNode<T> newNode = search(key);
 
       if (search(key) == null) {
+
          if (height > maxHeight) {
             RuntimeException e = new RuntimeException("the given height is greater than maxHeight");
             throw e;
          }
+
          newNode = new SkipListNode<T>(key, height, newValue);
          for (int level = maxHeight - 1; level >= 0; level--) {
 
@@ -57,34 +59,34 @@ public class SkipListImpl<T> implements SkipList<T> {
 
    @Override
    public void remove(int key) {
-      SkipListNode<T> rem = search(key);
-      
-      if (rem != null) {
+      SkipListNode<T> toBeRemoved = search(key);
+
+      if (toBeRemoved != null) {
          SkipListNode<T> aux = this.root;
 
-         for (int i = rem.height() - 1; i >= 0; i--) {
+         for (int i = toBeRemoved.height() - 1; i >= 0; i--) {
             while (aux.getForward(i).getKey() != key) {
                aux = aux.getForward(i);
             }
 
-            aux.forward[i] = rem.forward[i];
+            aux.forward[i] = toBeRemoved.forward[i];
          }
       }
    }
 
    @Override
    public int height() {
-	   
-	   int max = maxHeight - 1;
-	   
-	   SkipListNode<T> aux = this.root;
-	   
-	   while(aux.getForward(max).equals(NIL) && max > 0) {		   
-		   max--;
-	   }
-	   
-	   return max;
- 
+
+      int max = maxHeight - 1;
+
+      SkipListNode<T> aux = this.root;
+
+      while (aux.getForward(max).equals(NIL) && max > 0) {
+         max--;
+      }
+
+      return max;
+
    }
 
    @Override
@@ -92,9 +94,9 @@ public class SkipListImpl<T> implements SkipList<T> {
 
       SkipListNode<T> aux = this.root;
 
-      for (int i = this.height() - 1; i >= 0; i--) {
-         while (aux.forward[i].key < key) {
-            aux = aux.forward[i];
+      for (int level = this.height() - 1; level >= 0; level--) {
+         while (aux.forward[level].key < key) {
+            aux = aux.forward[level];
          }
       }
       aux = aux.forward[0];
@@ -122,10 +124,11 @@ public class SkipListImpl<T> implements SkipList<T> {
       SkipListNode<T> aux = this.root;
       int i = 0;
       while (!aux.equals(NIL)) {
-         array[i] = aux;
+         array[i++] = aux;
          aux = aux.getForward(0);
-         i++;
+
       }
+
       array[i++] = NIL;
       return array;
    }
