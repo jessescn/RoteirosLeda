@@ -109,7 +109,7 @@ public class AVLTreeImpl<T extends Comparable<T>> extends BSTImpl<T> implements 
 				}
 			}
 		}
-
+		System.out.println(this.root.getParent());
 		this.rebalance(node);
 	}
 

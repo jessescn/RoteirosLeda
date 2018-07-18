@@ -63,7 +63,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 			insert(element, this.root);
 	}
 
-	private void insert(T element, BSTNode<T> node) {
+	protected void insert(T element, BSTNode<T> node) {
 		BSTNode<T> nil = new BSTNode<T>();
 
 		if (this.isEmpty()) {
