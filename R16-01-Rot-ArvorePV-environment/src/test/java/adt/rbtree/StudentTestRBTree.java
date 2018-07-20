@@ -15,10 +15,6 @@ public class StudentTestRBTree {
 	public void initialize() {
 		myRB = new RBTreeImpl<Integer>();
 	}
-	
-	@Test
-	public void testHeight() {
-	}
 
 	@Test
 	public void testInsert0() {
